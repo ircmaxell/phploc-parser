@@ -50,7 +50,7 @@ class Parser {
         $files = $this->findFiles($root);
         $analyser = new Analyser;
         $ret = $analyser->countFiles($files, true);
-        rmdir($root->url());
+        static::$vfsRoot->removeChild($root);
         return array_merge($commitInfo, $ret);
     }   
 
