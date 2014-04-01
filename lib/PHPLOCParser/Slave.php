@@ -23,6 +23,10 @@ class Slave extends Command {
     }
 
     public function __destruct() {
+        $this->unlock();
+    }
+
+    public function unlock() {
         if ($this->id) {
             $this->getService("db")->executeUpdate("UPDATE queue SET locked = 0 WHERE locked = ?", [$this->id]);
         }
@@ -30,6 +34,7 @@ class Slave extends Command {
 
     protected function execute(InputInterface $input, OutputInterface $output) {
         $this->id = mt_rand(1, mt_getrandmax());
+        register_shutdown_function([$this, "unlock"]);
         $db = $this->getService("db");
         do {
             $task = [];
