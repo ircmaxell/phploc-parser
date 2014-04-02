@@ -62,7 +62,7 @@ class Parser {
             "author_name" => $obj->author->name,
             "author_email" => $obj->author->email,
             "time" => date("Y-m-d H:i:s", $obj->author->time),
-            "parent" => count($obj->parents) === 1 ? "" : sha1_hex($obj->parents[0]),
+            "parent" => count($obj->parents) !== 1 ? "" : sha1_hex($obj->parents[0]),
         ];
     }
 
