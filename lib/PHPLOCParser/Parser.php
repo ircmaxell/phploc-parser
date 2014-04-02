@@ -81,7 +81,9 @@ class Parser {
     
     private function checkoutTree(GitTree $tree, $root) {
         foreach ($tree->nodes as $name => $node) {
-            if ($node->is_dir) {
+            if ($node->is_submodule) {
+                continue;
+            } elseif ($node->is_dir) {
                 $dir  = vfsStream::newDirectory($name);
                 $root->addChild($dir);
                 $this->checkoutTree($this->git->getObject($node->object), $dir);
