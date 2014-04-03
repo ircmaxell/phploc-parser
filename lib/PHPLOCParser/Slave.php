@@ -59,7 +59,7 @@ class Slave extends Command {
                 $conn->delete("queue", ["id" => $task['id']]);
             });
             if ($requests++ >= $maxRequests) {
-                $cmd = 'hhvm ' . escapeshellarg($_SERVER['PHP_SELF']) . ' --max-requests="' . $maxRequests . '" slave > /dev/null 2>&1 &';
+                $cmd = 'hhvm ' . escapeshellarg($_SERVER['PHP_SELF']) . ' --max-requests="' . $maxRequests . '" slave >> /tmp/process.log 2>&1 &';
                 exec($cmd);
                 return;
             }
