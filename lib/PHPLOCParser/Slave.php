@@ -46,10 +46,10 @@ class Slave extends Command {
             $task = [];
             $db->transactional(function($conn) use (&$task, $id) {
                 if ($id) {
-                    $conn->executeUpdate("UPDATE queue SET locked = ? WHERE id = ? LIMIT 1", [$this->id, $id]);
+                    $conn->executeUpdate("UPDATE queue SET locked = ?, machine = ?, pid = ?, modified = NOW() WHERE id = ? LIMIT 1", [$this->id, gethostname(), getmypid(), $id]);
                     $task = $conn->fetchAssoc("SELECT * FROM queue WHERE id = ? LIMIT 1", [$id]);
                 } else {
-                    $conn->executeUpdate("UPDATE queue SET locked = ? WHERE locked = 0 LIMIT 1", [$this->id]);
+                    $conn->executeUpdate("UPDATE queue SET locked = ?, machine = ?, pid = ?, modified = NOW() WHERE locked = 0 LIMIT 1", [$this->id, gethostname(), getmypid()]);
                     $task = $conn->fetchAssoc("SELECT * FROM queue WHERE locked = ? LIMIT 1", [$this->id]);
                 }
             });

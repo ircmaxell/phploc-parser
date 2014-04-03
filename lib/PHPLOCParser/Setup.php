@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Setup extends Command {
 
-    protected $version = 2;
+    protected $version = 3;
 
     protected function configure() {
         $this
@@ -57,6 +57,7 @@ class Setup extends Command {
         }
         $db->query("INSERT INTO schema_version (id, version) VALUES (1, 1)");
         $this->migrateFrom1();
+        $this->migrateFrom2();
     }
 
     protected function migrateFrom1() {
@@ -128,4 +129,19 @@ class Setup extends Command {
         $db->update("schema_version", ["version" => 2], ["id" => 1]);      
     }
 
+    protected function migrateFrom2() {
+        $db = $this->getService("db");
+        $sm = $db->getSchemaManager();
+        $from = $sm->createSchema();
+        $to = clone $from;
+        $queue = $to->getTable("queue");
+        $queue->addColumn("modified", "datetime");
+        $queue->addColumn("machine", "string", ["length" => 255]);
+        $queue->addColumn("pid", "string", ["length" => 255]);
+        $sql = $from->getMigrateToSql($to, $db->getDatabasePlatform());
+        foreach ($sql as $q) {
+            $db->query($q);
+        }
+        $db->update("schema_version", ["version" => 3], ["id" => 1]);      
+    }
 }
