@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "19ba796f74c70a2f2b38ce1ed44432b8",
+    "hash": "f8eca9a9dbea778c3c7d99bea17c7501",
     "packages": [
         {
             "name": "cilex/cilex",
@@ -646,16 +646,16 @@
         },
         {
             "name": "phploc/phploc",
-            "version": "dev-hhvm_infinite_loop_fix",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ircmaxell/phploc.git",
-                "reference": "7a8e52c2fd5465ad6744d15a72140e7b4849b333"
+                "url": "https://github.com/sebastianbergmann/phploc.git",
+                "reference": "c779a332ea715fcdaef1e0f48b6f606baf5c6166"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ircmaxell/phploc/zipball/7a8e52c2fd5465ad6744d15a72140e7b4849b333",
-                "reference": "7a8e52c2fd5465ad6744d15a72140e7b4849b333",
+                "url": "https://api.github.com/repos/sebastianbergmann/phploc/zipball/c779a332ea715fcdaef1e0f48b6f606baf5c6166",
+                "reference": "c779a332ea715fcdaef1e0f48b6f606baf5c6166",
                 "shasum": ""
             },
             "require": {
@@ -679,6 +679,7 @@
                     "src/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "BSD-3-Clause"
             ],
@@ -691,11 +692,7 @@
             ],
             "description": "A tool for quickly measuring the size of a PHP project.",
             "homepage": "https://github.com/sebastianbergmann/phploc",
-            "support": {
-                "issues": "https://github.com/sebastianbergmann/phploc/issues",
-                "source": "https://github.com/ircmaxell/phploc/tree/hhvm_infinite_loop_fix"
-            },
-            "time": "2014-04-03 15:43:32"
+            "time": "2014-03-07 15:58:27"
         },
         {
             "name": "pimple/pimple",
