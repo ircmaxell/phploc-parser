@@ -16,10 +16,14 @@
                     ]
                 }
             }
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/ircmaxell/phploc"
         }
     ],
     "require": {
-        "phploc/phploc": "2.0.*",
+        "phploc/phploc": "dev-hhvm_infinite_loop_fix",
         "mikey179/vfsStream": "1.2.*",
         "patrikf/glip": "0.1",
         "cilex/cilex": "1.1.*",
