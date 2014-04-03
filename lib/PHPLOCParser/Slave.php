@@ -62,6 +62,9 @@ class Slave extends Command {
             $db->transactional(function($conn) use ($task, $result) {
                 $row = array_merge($task, $result);
                 unset($row['locked']);
+                unset($row['machine']);
+                unset($row['modified']);
+                unset($row['pid']);
                 $conn->insert("results", $row);
                 $conn->delete("queue", ["id" => $task['id']]);
             });
