@@ -21,7 +21,8 @@ class Slave extends Command {
         $this
             ->setName("slave")
             ->setDescription("Run in slave mode")
-            ->addOption('max-requests', null, InputOption::VALUE_REQUIRED, "Max requests before respawning", 100);
+            ->addOption('max-requests', null, InputOption::VALUE_REQUIRED, "Max requests before respawning", 100)
+            ->addOption('task-id', null, InputOption::VALUE_REQUIRED, "The task id to process", 0);
     }
 
     public function __destruct() {
@@ -40,11 +41,17 @@ class Slave extends Command {
         $db = $this->getService("db");
         $requests = 0;
         $maxRequests = (int) $input->getOption("max-requests");
+        $id = (int) $input->getOption("task-id");
         do {
             $task = [];
-            $db->transactional(function($conn) use (&$task) {
-                $conn->executeUpdate("UPDATE queue SET locked = ? WHERE locked = 0 LIMIT 1", [$this->id]);
-                $task = $conn->fetchAssoc("SELECT * FROM queue WHERE locked = ? LIMIT 1", [$this->id]);
+            $db->transactional(function($conn) use (&$task, $id) {
+                if ($id) {
+                    $conn->executeUpdate("UPDATE queue SET locked = ? WHERE id = ? LIMIT 1", [$this->id, $id]);
+                    $task = $conn->fetchAssoc("SELECT * FROM queue WHERE id = ? LIMIT 1", [$id]);
+                } else {
+                    $conn->executeUpdate("UPDATE queue SET locked = ? WHERE locked = 0 LIMIT 1", [$this->id]);
+                    $task = $conn->fetchAssoc("SELECT * FROM queue WHERE locked = ? LIMIT 1", [$this->id]);
+                }
             });
             if (!$task) {
                 $output->writeln("No more tasks, exiting");
@@ -58,6 +65,9 @@ class Slave extends Command {
                 $conn->insert("results", $row);
                 $conn->delete("queue", ["id" => $task['id']]);
             });
+            if ($id) {
+                return;
+            }
             if ($requests++ >= $maxRequests) {
                 $cmd = 'hhvm ' . escapeshellarg($_SERVER['PHP_SELF']) . ' --max-requests="' . $maxRequests . '" slave >> /tmp/process.log 2>&1 &';
                 exec($cmd);
