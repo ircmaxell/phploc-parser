@@ -65,7 +65,11 @@ class Slave extends Command {
                 unset($row['machine']);
                 unset($row['modified']);
                 unset($row['pid']);
-                $conn->insert("results", $row);
+                try {
+                    $conn->insert("results", $row);
+                } catch (\Doctrine\DBAL\Exception\UniqueConstraintViolationException $e) {
+                    // Ignore and move on
+                }
                 $conn->delete("queue", ["id" => $task['id']]);
             });
             if ($id) {
