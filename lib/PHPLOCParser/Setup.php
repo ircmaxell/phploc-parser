@@ -69,8 +69,8 @@ class Setup extends Command {
         $results->addColumn("commit", "string", ["length" => "255"]);
         $results->addColumn("summary", "string", ["length" => "255"]);
         $results->addColumn("detail", "text");
-        $results->addColumn("author_name", "string", ["length" => "255"]);
-        $results->addColumn("author_email", "string", ["length" => "255"]);
+        $results->addColumn("author_name", "string", ["length" => "255", "notnull" => false]);
+        $results->addColumn("author_email", "string", ["length" => "255", "notnull" => false]);
         $results->addColumn("time", "datetime");
         $results->addColumn("parent", "string", ["length" => "255"]);
         $results->addColumn("files", "integer");
