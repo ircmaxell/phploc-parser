@@ -21,6 +21,14 @@ class Parser {
         "inc",
         "module",
     ];
+
+    protected $disallowedDirectories = [
+        "demos",
+        "vendor",
+        "resources",
+        "build",
+        "docs",
+    ];
     
     public function __construct($dir) {
         if (!in_array("vfs", stream_get_wrappers())) {
@@ -84,7 +92,7 @@ class Parser {
             if ($node->is_submodule) {
                 continue;
             } elseif ($node->is_dir) {
-                $dir  = vfsStream::newDirectory($name);
+                $dir  = vfsStream::newDirectory((string) $name);
                 $root->addChild($dir);
                 $this->checkoutTree($this->git->getObject($node->object), $dir);
             } else {
@@ -95,9 +103,10 @@ class Parser {
 
     private function findFiles($root) {
         $regex = "(\.(" . implode("|", $this->allowedExtensions) . ')$)i';
+        $disallowed = "(/(" . implode("|", $this->disallowedDirectories) . ")/)i";
         $files = [];
         foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root->url())) as $file) {
-            if (strpos($file->getPathname(), "/vendor/") !== false) {
+            if (preg_match($disallowed, $file->getPathname())) {
                 continue;
             }
             if (!preg_match($regex, $file->getPathname())) {
